@@ -23,6 +23,10 @@ end
 git_repos = Array.new
 git_repos.push ["git://github.com/elifesciences/", "elife-api-prototype"]
 git_repos.push ["git://github.com/elifesciences/", "elife-bot"]
+git_repos.push ["git://github.com/elifesciences/", "drupal-site-jnl-elife"]
+#git_repos.push ["git@github.com:highwire/", "drupal-highwire"]
+#git_repos.push ["git@github.com:highwire/", "drupal-webroot"]
+
 
 git_repos.each do |repos|
   base_uri = repos[0]
