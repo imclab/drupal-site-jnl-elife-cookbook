@@ -77,7 +77,7 @@ git_private_repos = Array.new
 # push [repo base, repo name,reference] 
 git_private_repos.push ["git@github.com:elifesciences/", "drupal-site-jnl-elife", "elife-dev"] 
 # git_private_repos.push ["git@github.com:highwire/git@github.com:highwire/", "drupal-highwire", "7.x-1.x-dev"]
-# git_private_repos.push ["git@github.com:highwire/git@github.com:highwire/", "drupal-webroot", "7.x-1.x-dev"]
+git_private_repos.push ["git@github.com:highwire/git@github.com:highwire/", "drupal-webroot", "7.x-1.x-dev"]
                         
 git_private_repos.each do |repos|
   base_uri = repos[0]
