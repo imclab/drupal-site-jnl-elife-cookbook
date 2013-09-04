@@ -55,9 +55,9 @@ directory localgit do
   action :create
 end
 
-# prove that we can add a couple of public repositories
+# add public repos, if we want any
 git_public_repos = Array.new
-git_public_repos.push ["git://github.com/elifesciences/", "elife-api-prototype"]
+#git_public_repos.push ["git://github.com/elifesciences/", "elife-api-prototype"]
 
 git_public_repos.each do |repos|
   base_uri = repos[0]
@@ -73,12 +73,13 @@ end
 
 
 # add private repos
+# add private repos
 git_private_repos = Array.new
-# push [repo base, repo name,reference] 
+# push [repo base, repo name, reference] 
 git_private_repos.push ["git@github.com:elifesciences/", "drupal-site-jnl-elife", "elife-dev"] 
-# git_private_repos.push ["git@github.com:highwire/git@github.com:highwire/", "drupal-highwire", "7.x-1.x-dev"]
-git_private_repos.push ["git@github.com:highwire/git@github.com:highwire/", "drupal-webroot", "7.x-1.x-dev"]
-                        
+git_private_repos.push ["git@github.com:highwire/", "drupal-highwire", "7.x-1.x-dev"]
+git_private_repos.push ["git@github.com:highwire/", "drupal-webroot", "7.x-1.x-dev"] 
+
 git_private_repos.each do |repos|
   base_uri = repos[0]
   repos_name = repos[1] 
@@ -87,12 +88,7 @@ git_private_repos.each do |repos|
   repos_dir = localgit + "/" + repos_name
   git repos_dir do
     repository repos_uri
-    reference repos_ref
+    revision repos_ref
     action :sync
   end 
 end 
-
-# attempt to add highwire core drupal repositories
-#git_repos.push ["git@github.com:highwire/", "drupal-highwire"]
-#git_repos.push ["git@github.com:highwire/", "drupal-webroot"]
-
