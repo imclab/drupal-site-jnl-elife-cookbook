@@ -58,7 +58,6 @@ end
 # prove that we can add a couple of public repositories
 git_repos = Array.new
 git_repos.push ["git://github.com/elifesciences/", "elife-api-prototype"]
-git_repos.push ["git://github.com/elifesciences/", "elife-bot"]
 
 git_repos.each do |repos|
   base_uri = repos[0]
