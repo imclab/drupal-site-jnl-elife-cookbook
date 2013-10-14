@@ -80,14 +80,23 @@ git_private_repos.each do |repos|
   end 
 end 
 
+# Unnecessary as  the  drupal webroot already contains these
+#%w{ modules themes}.each do |d|
+#  link "#{localgit}/drupal-webroot/sites/all/#{d}" do
+#		to "#{localgit}/drupal-highwire/#{d}"
+#	end
+#end
+#
+#link "#{localgit}/drupal-webroot/profiles/highwire_profile" do
+#  to "#{localgit}/drupal-highwire/profiles/highwire_profile"
+#end
+#
+
+# set up symlinks into vagrant shared folder
+# drupal-webroot/sites/default/
 %w{ modules themes}.each do |d|
-  link "#{localgit}/drupal-webroot/sites/all/#{d}" do
-		to "#{localgit}/drupal-highwire/#{d}"
+	link "#{localgit}/drupal-webroot/sites/default/#{d}" do
+	  to "#{elife_module_dir}/#{d}"
 	end
 end
-
-link "#{localgit}/drupal-webroot/profiles/highwire_profile" do
-  to "#{localgit}/drupal-highwire/profiles/highwire_profile"
-end
-
 
