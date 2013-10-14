@@ -81,8 +81,8 @@ git_private_repos.each do |repos|
 end 
 
 %w{ modules themes}.each do |d|
-  link "#{localgit}/drupal-highwire/#{d}" do
-		to "#{localgit}/drupal-webroot/sites/all/#{d}"
+  link "#{localgit}/drupal-webroot/sites/all/#{d}" do
+		to "#{localgit}/drupal-highwire/#{d}"
 	end
 end
 
