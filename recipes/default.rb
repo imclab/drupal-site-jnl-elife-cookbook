@@ -9,6 +9,7 @@
 
 drupal_dir = "/opt/public"
 elife_module_dir = "/shared/elife_module"
+site = "elife.vbox.local"
 
 # add a .ssh directory
 Directory "/root/.ssh" do
@@ -100,3 +101,9 @@ end
 	end
 end
 
+web_app site do
+	template "sites.conf.erb"
+	server_name site
+	server_aliases [site]
+	docroot "#{localgit}/drupal-webroot"
+end

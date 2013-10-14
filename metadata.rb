@@ -6,3 +6,5 @@ description      'Installs/Configures elife-drupal-local-env'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '0.1.0'
 
+# we're using the web_app definition from the apache2 cookbook
+depends "apache2"
