@@ -7,6 +7,9 @@
 # All rights reserved - Do Not Redistribute
 #
 
+drupal_dir = "/opt/public"
+elife_module_dir = "/shared/elife_module"
+
 # add a .ssh directory
 Directory "/root/.ssh" do
   action :create
@@ -46,7 +49,7 @@ end
 include_recipe "git"
 
 # where to put our repositories
-localgit = "/home/vagrant/localgit"
+localgit = drupal_dir
 
 directory localgit do
   owner "root"
@@ -55,28 +58,11 @@ directory localgit do
   action :create
 end
 
-# add public repos, if we want any
-git_public_repos = Array.new
-#git_public_repos.push ["git://github.com/elifesciences/", "elife-api-prototype"]
-
-git_public_repos.each do |repos|
-  base_uri = repos[0]
-  repos_name = repos[1] 
-  repos_uri = base_uri + repos_name + ".git"
-  repos_dir = localgit + "/" + repos_name
-  git repos_dir do
-    repository repos_uri
-    reference "master"
-    action :sync
-  end
-end
-
-
 # add private repos
 # add private repos
 git_private_repos = Array.new
 # push [repo base, repo name, reference] 
-git_private_repos.push ["git@github.com:elifesciences/", "drupal-site-jnl-elife", "elife-dev"] 
+#git_private_repos.push ["git@github.com:elifesciences/", "drupal-site-jnl-elife", "elife-dev"] 
 git_private_repos.push ["git@github.com:highwire/", "drupal-highwire", "7.x-1.x-dev"]
 git_private_repos.push ["git@github.com:highwire/", "drupal-webroot", "7.x-1.x-dev"] 
 
@@ -87,8 +73,21 @@ git_private_repos.each do |repos|
   repos_uri = base_uri + repos_name + ".git"
   repos_dir = localgit + "/" + repos_name
   git repos_dir do
+    depth 1
     repository repos_uri
     revision repos_ref
     action :sync
   end 
 end 
+
+%{ modules themes}.each do |d|
+  link "#{localgit}/drupal-highwire/#{d}" do
+		to "#{localgit}/drupal-webroot/sites/all/#{d}"
+	end
+end
+
+link "#{localgit}/drupal-webroot/profiles/highwire_profile" do
+  to "#{localgit}/drupal-highwire/profiles/highwire_profile"
+end
+
+
