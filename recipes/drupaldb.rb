@@ -28,25 +28,27 @@ end
 # create a drupal db
 execute "create-drupal-database" do
   command "/usr/bin/mysql -u root -p#{node[:mysql][:server_root_password]} -e \"" +
-      "CREATE DATABASE IF NOT EXISTS #{node[:mysql][:server_database]};\""
+      "DROP DATABASE #{node[:mysql][:server_database]}; CREATE DATABASE #{node[:mysql][:server_database]};\""
+  creates "#{sqldump_gzfile}.lock"
   action :run
 end
 
 log "load-drupal-database" do
-  message "load the drupal-database: #{node[:mysql][:server_database]}  from #{sqldump_gzfile}:"
+  message "load the drupal-database: #{node[:mysql][:server_database]} from #{sqldump_gzfile}:"
   level :info
 end
 
 # unpack the database
 execute "unpack-drupal-database" do
-  command "/bin/gunzip -c #{sqldump_gzfile} > #{sqldump_sqlfile}" 
-  creates "#{sqldump_sqlfile}"
+  command "/bin/gunzip -c #{sqldump_gzfile} > #{sqldump_sqlfile}"
+  creates "#{sqldump_gzfile}.lock"
   action :run
 end
 
 # load the drupal db
 execute "load-drupal-database" do
-  command "/usr/bin/mysql -u root -p#{node[:mysql][:server_root_password]} #{node[:mysql][:server_database]} < #{sqldump_sqlfile}"
+  command "/usr/bin/mysql -u root -p#{node[:mysql][:server_root_password]} #{node[:mysql][:server_database]} < #{sqldump_sqlfile} && touch #{sqldump_gzfile}.lock"
+  creates "#{sqldump_gzfile}.lock"
   action :run
 end
 
