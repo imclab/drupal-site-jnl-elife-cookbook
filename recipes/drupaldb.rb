@@ -28,7 +28,7 @@ end
 # create a drupal db
 execute "create-drupal-database" do
   command "/usr/bin/mysql -u root -p#{node[:mysql][:server_root_password]} -e \"" +
-      "DROP DATABASE #{node[:mysql][:server_database]}; CREATE DATABASE #{node[:mysql][:server_database]};\""
+      "DROP DATABASE IF EXISTS #{node[:mysql][:server_database]}; CREATE DATABASE #{node[:mysql][:server_database]};\""
   creates "#{sqldump_gzfile}.lock"
   action :run
 end
