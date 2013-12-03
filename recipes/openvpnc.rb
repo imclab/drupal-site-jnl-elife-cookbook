@@ -41,9 +41,9 @@ remote_file "Copy certificate file" do
   mode 0750
 end
 
-remote_file "Copy TLS certificate file" do
-  path "#{key_dir}/ta.crt"
-  source "file://#{key_source_dir}/ta.crt"
+remote_file "Copy TLS Key file" do
+  path "#{key_dir}/ta.key"
+  source "file://#{key_source_dir}/ta.key"
   owner 'root'
   group 'root'
   mode 0750
