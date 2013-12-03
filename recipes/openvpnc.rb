@@ -23,7 +23,13 @@ node.default["openvpnc"]["cipher"] = "AES-256-CBC"
 node.default["openvpnc"]["user"] = "root"
 node.default["openvpnc"]["group"] = "root"
 
-key_source_dir  = node["git_root"]
+# These are filenames (not paths) copied from source to VM
+client_cert = node["openvpnc"]["client_cert"]
+client_key = node["openvpnc"]["client_key"]
+tls_key = node["openvpnc"]["tls_key"]
+ca_cert = node["openvpnc"]["ca_cert"]
+
+key_source_dir  = node["openvpnc"]["git_root"]
 key_source_dir  =  "/opt/public"
 key_dir = "/etc/openvpn"
 
@@ -34,32 +40,32 @@ directory key_dir do
 end
 
 remote_file "Copy certificate file" do
-  path "#{key_dir}/client.crt"
-  source "file://#{key_source_dir}/client.crt"
+  path "#{key_dir}/#{client_cert}"
+  source "file://#{key_source_dir}/#{client_cert}"
   owner 'root'
   group 'root'
   mode 0750
 end
 
 remote_file "Copy TLS Key file" do
-  path "#{key_dir}/ta.key"
-  source "file://#{key_source_dir}/ta.key"
+  path "#{key_dir}/#{tls_key}"
+  source "file://#{key_source_dir}/#{tls_key}"
   owner 'root'
   group 'root'
   mode 0750
 end
 
 remote_file "Copy key file" do
-  path "#{key_dir}/client.key"
-  source "file://#{key_source_dir}/client.key"
+  path "#{key_dir}/#{client_key}"
+  source "file://#{key_source_dir}/#{client_key}"
   owner 'root'
   group 'root'
   mode 0700
 end
 
 remote_file "Copy CA file" do
-  path "#{key_dir}/ca.crt"
-  source "file://#{key_source_dir}/ca.crt"
+  path "#{key_dir}/#{ca_cert}"
+  source "file://#{key_source_dir}/#{ca_cert}"
   owner 'root'
   group 'root'
   mode 0750
@@ -75,10 +81,13 @@ openvpnc_ovpnclient 'client' do
   fragment node['openvpnc']['fragment']
   ns_cert_type node['openvpnc']['ns_cert_type']
   tls_cipher node['openvpnc']['tls_cipher']
-  tls_key node['openvpnc']['tls_key']
   cipher node['openvpnc']['cipher']
   routes node['openvpnc']['routes']
   script_security node['openvpnc']['script_security']
+  client_cert "#{client_cert}"
+  client_key "#{client_key}"
+  tls_key "#{tls_key}"
+  ca_cert "#{ca_cert}"
   key_dir "#{key_dir}"
   subnet node['openvpnc']['subnet']
   netmask node['openvpnc']['netmask']

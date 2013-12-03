@@ -1,0 +1,113 @@
+<% if @type == "client" || @type == "client-bridge" -%>
+client
+<% end -%>
+<% if @type == "server-bridge" || @type == "client-bridge" -%>
+dev tap<%= @interface_num %>
+<% else -%>
+dev tun<%= @interface_num %>
+<% end -%>
+keepalive 10 120
+comp-lzo
+#
+# IP Endpoints and Ports
+<% if @local && @local != "0.0.0.0" %>
+local <%= @local %>
+<% end -%>
+
+<% if @type == "client" || @type == "client-bridge" -%>
+<%   if @port -%>
+port <%= @port %>
+remote <%= @remote %> <%= @port %>
+<%   else -%>
+remote <%= @remote %> 1194
+<%   end -%>
+<% else -%>
+<%   if @port -%>
+port <%= @port %>
+<%   end -%>
+<%   if @remote %>
+remote <%= @remote %>
+<%   end -%>
+<% end -%>
+#
+# IP Protocol (UDP or TCP, defaults to UDP)
+<% if @proto -%>
+proto <%= @proto %>
+<% else -%>
+proto udp
+<% end -%>
+#
+# Networking and Routes
+<% if @routes -%>
+<%   @routes.each do |route| -%>
+<%= route %>
+<%   end -%>
+<% end -%>
+<% if @type == "server" -%>
+<%= @type %> <%= @subnet %> <%= @netmask %>
+<% end -%>
+<% if @type == "server" || @type == "server-bridge" -%>
+ifconfig-pool-persist /etc/openvpn/ipp.txt
+script-security <%= @script_security %>
+<%   if @max_clients -%>
+max-clients <%= @max_clients %>
+<%   end -%>
+<%   if @dhcp_dns -%>
+push "dhcp-option DNS <%= @dhcp_dns %>"
+<%   end -%>
+<%   if @dhcp_domain -%>
+push "dhcp-option DOMAIN <%= @dhcp_domain %>"
+<%   end -%>
+<%   if @duplicate_cn -%>
+duplicate-cn
+<%   end -%>
+<%   if @client_subnet_route -%>
+client-config-dir ccd
+route <%= @client_subnet_route %>
+<%   end -%>
+<% end -%>
+#
+# Plugins
+<% @plugins.each do |p| -%>
+plugin <%= p %>
+<% end -%>
+#
+<% if @type == "server" || @type == "server-bridge" -%>
+# Server Keys and certificates.
+ca   <%= @key_dir %>/<%= ca.crt %>
+key  <%= @key_dir %>/<%= server.key %>
+cert <%= @key_dir %>/<%= server.crt %>
+dh   <%= @key_dir %>/dh<%= @key_size %>.pem
+<% end -%>
+<% if @type == "client" || @type == "client-bridge" -%>
+# Client Keys and certificates.
+ca   <%= @key_dir %>/<%= @ca_cert %>
+cert <%= @key_dir %>/<%= @client_cert %>
+key  <%= @key_dir %>/<%= @client_key %>
+<% end -%>
+<% if @cipher -%>
+cipher <%= @cipher %>
+<% end -%>
+
+<% if @tls_key -%>
+tls-auth <%= @key_dir %>/<%= @tls_key %> 1 # Use 0=server, 1=client
+<% end -%>
+<% if @tls_cipher -%>
+tls-cipher <%= @tls_cipher %>
+<% end -%>
+#
+# Permissions and Logging
+user <%= @user %>
+group <%= @group %>
+#
+# avoid accessing certain resources on restart
+persist-key
+persist-tun
+#
+# current client connections
+status <%= @status_log %>
+#
+# logging settings.
+log-append  <%= @log %>
+verb <%= @verb %>
+mute <%= @mute %>
