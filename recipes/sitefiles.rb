@@ -89,4 +89,10 @@ link "#{webroot_dir}/sites/default/settings.php" do
   to "#{settings_file}"
 end
 
+# Create the files folder if it doesn't exist
+directory "#{webroot_dir}/sites/default/files" do
+  mode 0777
+  action :create
+end
+
 # web_app call and template is in the elife-drupal-cookbook
