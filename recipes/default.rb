@@ -10,7 +10,10 @@
 include_recipe  "drupal-site-jnl-elife-cookbook::sshfix"
 include_recipe  "drupal-site-jnl-elife-cookbook::drupaldb"
 include_recipe  "drupal-site-jnl-elife-cookbook::sitefiles"
-include_recipe  "drupal-site-jnl-elife-cookbook::openvpnc"
+
+# This reference moved into the elife-vagrant's Vagrantfile to make it
+# easier to switch off.
+# include_recipe  "drupal-site-jnl-elife-cookbook::openvpnc"
 
 # The apache config file.
 include_recipe  "elife-drupal-cookbook::site_config"
